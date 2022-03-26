@@ -14,21 +14,24 @@ res.sendFile(__dirname + "/index.html");
 
 app.post("/", function(req, res) {
     rawStr = req.body.rawStr;
-    
-    var segsent = sentenceSegmentation(rawStr);
-    var segword = wordSegmentation(rawStr);
-    var swords = segword.join(', ');
-    var rmdstopwords = rmStopwords(segword);
-    var uni = noDuplicates(segword);
-    var reversed = revWords(segword);
-    var numbers = extractNumbers(segword);
-	var processed = {ss:segsent,sw:swords,rsp:rmdstopwords,u:uni,rev:reversed,nm:numbers};
-    
-    res.render('index.pug', processed);
+    if(rawStr.length!=0){
+        var segsent = sentenceSegmentation(rawStr);
+        var segword = wordSegmentation(rawStr);
+        var swords = segword.join(', ');
+        var rmdstopwords = rmStopwords(segword);
+        var uni = noDuplicates(segword);
+        var reversed = revWords(segword);
+        var numbers = extractNumbers(segword);
+        var processed = {ss:segsent,sw:swords,rsp:rmdstopwords,u:uni,rev:reversed,nm:numbers};
+        
+        res.render('index.pug', processed);
+    }
+    else{
+        res.send('How can I process an Empty string?? So Enter atleast something')
+    }
 
 });
 
-// app.use("/", (req,res,))
 
 app.listen(3000, function(){
 console.log("server is running on port 3000");
@@ -121,3 +124,4 @@ function extractNumbers(words){
         return 'No Numbers in the String'
     return numbers.join(', ');
 }
+
